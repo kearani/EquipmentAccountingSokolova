@@ -1,15 +1,24 @@
-﻿using System;
-using DAL;
+﻿using DAL;
 using DAL.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Configuration;
+using static System.Net.Mime.MediaTypeNames;
+using Application = System.Windows.Forms.Application;
 
-namespace EquipmentAccounting.ConsoleUI
+namespace WinFormsUI
 {
     public class Program
     {
+        public static IServiceProvider ServiceProvider { get; private set; }
         [STAThread]
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
+            ApplicationConfiguration.Initialize();
+            ConfigureServices();
+            Application.Run(ServiceProvider.GetRequiredService<DepartmentForm>());
+
             Console.WriteLine("Тестирование DAL...");
 
             try
@@ -53,13 +62,38 @@ namespace EquipmentAccounting.ConsoleUI
             Console.WriteLine("\nНажмите любую клавишу для выхода...");
             Console.ReadKey();
 
+            static void InitializeDatabase()
+            {
+                try
+                {
+                    using var scope = ServiceProvider.CreateScope();
+                    var context = scope.ServiceProvider.GetRequiredService<DAL.AppDbContext>();
 
+                    context.Database.EnsureCreated();
 
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Ошибка инициализации БД: {ex.Message}",
+                        "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
 
+            static void ConfigureServices()
+            {
+                var services = new ServiceCollection();
 
+                services.AddTransient<DepartmentForm>();
+                services.AddTransient<DepartmentAddForm>();
 
+                services.AddScoped<DAL.AppDbContext>();
+                services.AddScoped<DAL.Repositories.IDepartmentRepository, DAL.Repositories.DepartmentRepository>();
+                services.AddScoped<BLL.Services.DepartmentService>();
 
+                ServiceProvider = services.BuildServiceProvider();
 
+                InitializeDatabase();
+            }
 
         }
     }
