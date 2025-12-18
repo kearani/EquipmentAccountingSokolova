@@ -6,7 +6,6 @@ namespace DAL
 {
     public class AppDbContext : DbContext
     {
-        // DbSet'ы для таблиц
         public DbSet<Department> Departments { get; set; }
         public DbSet<Employee> Employees { get; set; }
         public DbSet<EquipmentType> EquipmentTypes { get; set; }

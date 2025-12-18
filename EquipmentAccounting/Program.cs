@@ -1,13 +1,13 @@
 ﻿using System;
-using System.Linq;
+using DAL;
 using DAL.Entities;
 using Microsoft.EntityFrameworkCore;
-using DAL;
 
 namespace EquipmentAccounting.ConsoleUI
 {
-    internal class Program
+    public class Program
     {
+        [STAThread]
         static void Main(string[] args)
         {
             Console.WriteLine("Тестирование DAL...");
@@ -52,6 +52,15 @@ namespace EquipmentAccounting.ConsoleUI
 
             Console.WriteLine("\nНажмите любую клавишу для выхода...");
             Console.ReadKey();
+
+
+
+
+
+
+
+
+
         }
     }
 }

@@ -95,11 +95,11 @@
         }
 
         #endregion
-
+        
         private Label label1;
-        private TextBox textBoxName;
-        private TextBox textBoxCode;
         private Label label2;
         private Button buttonAddForm;
+        public TextBox textBoxName;
+        public TextBox textBoxCode;
     }
 }
